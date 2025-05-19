@@ -49,14 +49,14 @@ public class SGCombatBehaviors {
 
             .newBehaviorSeries(
                     BehaviorSeries.<SGPatch>builder().weight(1).cooldown(200).canBeInterrupted(false).looping(false)
-                            .nextBehavior(Behavior.<SGPatch>builder().animationBehavior(SuperGolemAnimation.SG_SKILL_2).predicate(new TargetInGirdCondition(true,
+                            .nextBehavior(Behavior.<SGPatch>builder().animationBehavior(SuperGolemAnimation.SG_SKILL_2).predicate(new TargetInGirdCondition(
                                     new TargetInGirdCondition.Rectangle(-1, 2, 1, 13)))
                             )
             )
 
             .newBehaviorSeries(
                     BehaviorSeries.<SGPatch>builder().weight(100).cooldown(250).canBeInterrupted(false).looping(false)
-                            .nextBehavior(Behavior.<SGPatch>builder().animationBehavior(SuperGolemAnimation.SG_SKILL_3).predicate(new TargetInGirdCondition(true,
+                            .nextBehavior(Behavior.<SGPatch>builder().animationBehavior(SuperGolemAnimation.SG_SKILL_3).predicate(new TargetInGirdCondition(
                                     new TargetInGirdCondition.Rectangle(-1, 4, 1, 7)))
                             )
             )
