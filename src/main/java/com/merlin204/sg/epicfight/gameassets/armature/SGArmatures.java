@@ -10,6 +10,7 @@ public class SGArmatures {
 
 
     public static void registerArmatures(){
+
         Armatures.registerEntityTypeArmature(EntityType.IRON_GOLEM, SUPER_GOLEM_ARMATURE);
 
 

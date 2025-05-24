@@ -24,6 +24,8 @@ public class ModEvents {
     @SubscribeEvent
     public static void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(SGArmatures::registerArmatures);
+        event.enqueueWork(SGArmatures::registerArmatures);
+
 
     }
 
