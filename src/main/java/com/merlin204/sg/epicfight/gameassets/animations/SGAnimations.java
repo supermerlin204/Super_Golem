@@ -14,6 +14,7 @@ public class SGAnimations {
     public static void registerAnimations(AnimationManager.AnimationRegistryEvent event) {
         event.newBuilder(SGMOD.MOD_ID, (builder)->{
             SuperGolemAnimation.buildVFXAnimations(builder);
+            GolemHeartAnimations.buildVFXAnimations(builder);
 
 
 

@@ -5,6 +5,7 @@ import com.merlin204.sg.entity.SGEntities;
 
 import com.merlin204.sg.events.ForgeModEvents;
 
+import com.merlin204.sg.item.SGItems;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -26,6 +27,8 @@ public class SGMOD {
         IEventBus bus = context.getModEventBus();
         bus.addListener(this::client);
         SGEntities.ENTITIES.register(bus);
+        SGItems.ITEMS.register(bus);
+        SGItems.SUPER_GOLEM_TAB.register(bus);
 
 
 

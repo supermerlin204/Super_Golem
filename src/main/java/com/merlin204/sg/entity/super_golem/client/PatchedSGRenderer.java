@@ -19,13 +19,17 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderNameTagEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.Event;
 import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.api.client.model.Meshes;
 import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.client.mesh.IronGolemMesh;
 import yesman.epicfight.client.renderer.patched.entity.PatchedLivingEntityRenderer;
 import yesman.epicfight.client.renderer.patched.layer.PatchedGolemCrackLayer;
-import yesman.epicfight.mixin.MixinLivingEntityRenderer;
+import yesman.epicfight.mixin.client.MixinEntityRenderer;
+import yesman.epicfight.mixin.client.MixinLivingEntityRenderer;
 
 @OnlyIn(Dist.CLIENT)
 
@@ -37,6 +41,12 @@ public class PatchedSGRenderer extends PatchedLivingEntityRenderer<PathfinderMob
 
     @Override
     public void render(PathfinderMob entity, SGPatch entitypatch, SGRenderer renderer, MultiBufferSource buffer, PoseStack poseStack, int packedLight, float partialTicks) {
+        RenderNameTagEvent renderNameplateEvent = new RenderNameTagEvent(entity, entity.getDisplayName(), renderer, poseStack, buffer, packedLight, partialTicks);
+        MinecraftForge.EVENT_BUS.post(renderNameplateEvent);
+        MixinEntityRenderer entityRendererAccessor = (MixinEntityRenderer)renderer;
+        if ((entityRendererAccessor.invokeShouldShowName(entity) || renderNameplateEvent.getResult() == Event.Result.ALLOW) && renderNameplateEvent.getResult() != Event.Result.DENY) {
+            entityRendererAccessor.invokeRenderNameTag(entity, renderNameplateEvent.getContent(), poseStack, buffer, packedLight);
+        }
         Minecraft mc = Minecraft.getInstance();
         MixinLivingEntityRenderer livingEntityRendererAccessor = (MixinLivingEntityRenderer)renderer;
         boolean isVisible = true;
@@ -52,7 +62,7 @@ public class PatchedSGRenderer extends PatchedLivingEntityRenderer<PathfinderMob
 
         if (renderType != null) {
 
-            mesh.draw(poseStack, buffer, RenderType.entityCutoutNoCull(renderer.getTextureLocation(entity)), packedLight, 1.0F, 1.0F, 1.0F, 0.8F, OverlayTexture.NO_OVERLAY, entitypatch.getArmature(), armature.getPoseMatrices());
+            mesh.draw(poseStack, buffer, renderType, packedLight, 1.0F, 1.0F, 1.0F, isVisibleToPlayer ? 0.15F : 1.0F, this.getOverlayCoord(entity, entitypatch, partialTicks), armature, armature.getPoseMatrices());
 
 
                 if (entity.getHealth() <= entity.getMaxHealth() * 0.25F){

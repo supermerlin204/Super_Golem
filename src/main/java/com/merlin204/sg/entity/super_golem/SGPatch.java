@@ -1,7 +1,9 @@
 package com.merlin204.sg.entity.super_golem;
 
+import com.merlin204.avalon.entity.ai.AvalonAnimatedAttackGoal;
 import com.merlin204.sg.entity.super_golem.ai.SGCombatBehaviors;
 import com.merlin204.sg.epicfight.gameassets.animations.SuperGolemAnimation;
+import com.merlin204.sg.epicfight.gameassets.armature.SGArmatures;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -18,6 +20,7 @@ import net.minecraftforge.event.entity.EntityAttributeModificationEvent;
 import yesman.epicfight.api.animation.*;
 import yesman.epicfight.api.animation.types.DynamicAnimation;
 import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
@@ -40,7 +43,7 @@ public class SGPatch extends MobPatch<PathfinderMob> {
 
     protected void initAI() {
         super.initAI();
-        this.original.goalSelector.addGoal(0, new AnimatedAttackGoal<>(this, SGCombatBehaviors.TYPE1.build(this)));
+        this.original.goalSelector.addGoal(0, new AvalonAnimatedAttackGoal<>(this, SGCombatBehaviors.TYPE1.build(this)));
 
         (this.original).goalSelector.addGoal(1, new TargetChasingGoal(this, this.original, 1.0, false));
     }
@@ -60,7 +63,10 @@ public class SGPatch extends MobPatch<PathfinderMob> {
 
     }
 
-
+    @Override
+    public Armature getArmature() {
+        return SGArmatures.SUPER_GOLEM_ARMATURE.get();
+    }
 
     @Override
     public void poseTick(DynamicAnimation animation, Pose pose, float elapsedTime, float partialTicks) {
@@ -82,7 +88,23 @@ public class SGPatch extends MobPatch<PathfinderMob> {
     }
 
     public void updateMotion(boolean considerInaction) {
-        super.commonMobUpdateMotion(considerInaction);
+        if ((this.original).getHealth() <= 0.0F) {
+            this.currentLivingMotion = LivingMotions.DEATH;
+        } else if (this.state.inaction() && considerInaction) {
+            this.currentLivingMotion = LivingMotions.INACTION;
+        } else if ((this.original).getVehicle() != null) {
+            this.currentLivingMotion = LivingMotions.MOUNT;
+        } else if (!((this.original).getDeltaMovement().y < -0.550000011920929) && !this.isAirborneState()) {
+            if ((this.original).walkAnimation.speed() > 0.2F) {
+                this.currentLivingMotion = LivingMotions.WALK;
+            } else {
+                this.currentLivingMotion = LivingMotions.IDLE;
+            }
+        } else {
+            this.currentLivingMotion = LivingMotions.FALL;
+        }
+
+        this.currentCompositeMotion = this.currentLivingMotion;
     }
 
     public SoundEvent getWeaponHitSound(InteractionHand hand) {

@@ -17,13 +17,15 @@ import org.jetbrains.annotations.NotNull;
 @OnlyIn(Dist.CLIENT)
 public class SGRenderer extends MobRenderer<PathfinderMob, EmptyEntityModel<PathfinderMob>> {
 
+    private final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath("minecraft","textures/entity/iron_golem/iron_golem.png");
+
     public SGRenderer(EntityRendererProvider.Context context) {
         super(context, new EmptyEntityModel<>(), 0);
     }
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull PathfinderMob Entity) {
-        return ResourceLocation.fromNamespaceAndPath("minecraft","textures/entity/iron_golem/iron_golem.png");
+        return TEXTURE;
     }
 
 }

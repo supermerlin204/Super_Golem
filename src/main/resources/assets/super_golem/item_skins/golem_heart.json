@@ -1,0 +1,6 @@
+{
+  "renderer": "epic_fight_avalon:animation_item",
+  "texture": "minecraft:textures/entity/iron_golem/iron_golem.png",
+  "texture_l": "super_golem:textures/item/golem_heart_l.png",
+  "mesh": "super_golem:golem_heart"
+}
